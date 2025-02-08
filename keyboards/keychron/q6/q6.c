@@ -14,7 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "color.h"
+#include "host.h"
+#include "keycodes.h"
 #include "quantum.h"
+#include "quantum_keycodes_legacy.h"
+#include "rgb_matrix.h"
 
 #ifdef DIP_SWITCH_ENABLE
 
@@ -38,6 +43,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
     }
     switch (keycode) {
         case QK_RGB_MATRIX_TOGGLE:
+        case RGB_TOG:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {
                     case LED_FLAG_ALL: {
@@ -54,6 +60,15 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
                 rgb_matrix_enable();
             }
             return false;
+        case KC_CAPS_LOCK:
+            if (record->event.pressed) {
+                if (!host_keyboard_led_state().caps_lock) {
+                    rgb_matrix_sethsv_noeeprom(HSV_RED);
+                } else {
+                    rgb_matrix_reload_from_eeprom();
+                }
+            }
+            return true;
     }
     return true;
 }
@@ -65,7 +80,7 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
     // RGB_MATRIX_INDICATOR_SET_COLOR(index, red, green, blue);
 #    if defined(CAPS_LOCK_LED_INDEX)
     if (host_keyboard_led_state().caps_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(CAPS_LOCK_LED_INDEX, 255, 255, 255);
+        RGB_MATRIX_INDICATOR_SET_COLOR(CAPS_LOCK_LED_INDEX, 255, 0, 0);
     } else {
         if (!rgb_matrix_get_flags()) {
             RGB_MATRIX_INDICATOR_SET_COLOR(CAPS_LOCK_LED_INDEX, 0, 0, 0);
@@ -74,7 +89,7 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
 #    endif // CAPS_LOCK_LED_INDEX
 #    if defined(NUM_LOCK_LED_INDEX)
     if (host_keyboard_led_state().num_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(NUM_LOCK_LED_INDEX, 255, 255, 255);
+        RGB_MATRIX_INDICATOR_SET_COLOR(NUM_LOCK_LED_INDEX, 0, 255, 0);
     } else {
         if (!rgb_matrix_get_flags()) {
             RGB_MATRIX_INDICATOR_SET_COLOR(NUM_LOCK_LED_INDEX, 0, 0, 0);

@@ -14,7 +14,6 @@
             "cycle_all": true,
             "cycle_left_right": true,
             "cycle_up_down": true,
-            "rainbow_moving_chevron": true,
             "cycle_out_in": true,
             "cycle_out_in_dual": true,
             "cycle_pinwheel": true,
@@ -29,7 +28,15 @@
             "solid_reactive_multiwide": true,
             "solid_reactive_multinexus": true,
             "splash": true,
-            "solid_splash": true
+            "solid_splash": true,
+            "solid_multisplash": true
+        },
+        "default": {
+            "animation": "solid_multisplash",
+            "hue": 205,
+            "sat": 212,
+            "val": 255,
+            "speed": 255
         },
         "driver": "snled27351",
         "sleep": true
