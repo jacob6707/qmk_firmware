@@ -51,7 +51,6 @@ bool isIdle = true;
 static bool is_volume_display_active = false;
 static uint32_t last_volume_change_time = 0;    // Time of the last volume change
 static uint8_t volume_percentage = 0;           // Last received volume percentage
-
 static uint8_t max_x_coord = 0;                 // To store the rightmost x-coordinate
 
 #define KC_WINSS KC_WINDOWS_SCREENSHOT
@@ -131,7 +130,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_CAPS_LOCK:
             if (record->event.pressed) {
                 if (!host_keyboard_led_state().caps_lock) {
-                    rgb_matrix_sethsv_noeeprom(HSV_RED);
+                    if (rgb_matrix_get_flags() == LED_FLAG_ALL) {
+                        rgb_matrix_sethsv_noeeprom(HSV_RED);
+                    }
                 } else {
                     rgb_matrix_reload_from_eeprom();
                 }
@@ -150,9 +151,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     } break;
                     default: {
                         rgb_matrix_set_flags(LED_FLAG_ALL);
-                        if (host_keyboard_led_state().caps_lock) {
-                            rgb_matrix_sethsv_noeeprom(HSV_RED);
-                        }
                     } break;
                 }
             }
